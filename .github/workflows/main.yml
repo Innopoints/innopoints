@@ -1,0 +1,26 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2.0.0
+    - name: Run a one-line script
+      shell: bash
+      run: |
+        auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+        git submodule sync --recursive
+        git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+    - name: Inspect files
+      run: |
+        echo "Just making sure the submodules checkout worked"
+        echo "Root:"
+        ls -al
+        echo "Frontend:"
+        ls -al frontend
+        echo "Backend:"
+        ls -al backend
