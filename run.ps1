@@ -13,8 +13,7 @@ Get-Job
 
 while ($true)
 {
-	# TODO: Create some interface to check the processes' outputs/statuses
-	#     with error reporting in the infinite loop
+	Get-Job | Receive-Job
     if ($Host.UI.RawUI.KeyAvailable)
     {
 		$key = $Host.UI.RawUI.ReadKey("AllowCtrlC, IncludeKeyDown, IncludeKeyUp")
