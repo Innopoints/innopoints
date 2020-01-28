@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  nginx:
+    build: ./nginx/
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - servers
+
+  backend:
+    build: ./backend/
+    env_file:
+      - ./backend/.env
+    networks:
+      - servers
+      - postgres_db
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend/
+    env_file:
+      - ./frontend/.env
+    networks:
+      - servers
+    ports:
+      - 10000:10000       # For Sapper something. Dev only
+    volumes:
+      - ./frontend/src:/app/src    # To detect changes. Dev only
+
+  db:
+    image: postgres:12.1-alpine
+    env_file:
+      - ./.env
+    networks:
+      - postgres_db
+    volumes:
+      - database:/var/lib/postgresql/data
+
+networks:
+  servers:
+    driver: bridge
+  postgres_db:
+    driver: bridge
+
+volumes:
+  database:
