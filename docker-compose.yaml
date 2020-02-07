@@ -20,6 +20,9 @@ services:
       - postgres_db
     depends_on:
       - db
+    volumes:
+      - ./backend/innopoints:/app/innopoints        # To detect file changes. Dev only
+      - ./backend/static_files:/app/static_files
 
   frontend:
     build: ./frontend/
@@ -38,6 +41,8 @@ services:
       - ./.env
     networks:
       - postgres_db
+    ports:
+      - 5432:5432                 # For pgAdmin. Dev only
     volumes:
       - database:/var/lib/postgresql/data
 
