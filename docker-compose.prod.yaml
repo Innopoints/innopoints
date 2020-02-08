@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  nginx:
+    build: ./nginx/
+    image: innopoints-nginx
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - servers
+
+  backend:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile.prod
+    image: innopoints-backend
+    env_file:
+      - ./backend/.env
+    networks:
+      - servers
+      - postgres_db
+    volumes:
+      - ./backend/static_files:/app/static_files
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile.prod
+    image: innopoints-frontend
+    env_file:
+      - ./frontend/.env
+    networks:
+      - servers
+
+  db:
+    image: postgres:12.1-alpine
+    env_file:
+      - ./.env
+    networks:
+      - postgres_db
+    volumes:
+      - database:/var/lib/postgresql/data
+
+networks:
+  servers:
+    driver: bridge
+  postgres_db:
+    driver: bridge
+
+volumes:
+  database:
