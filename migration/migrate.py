@@ -1,14 +1,25 @@
+import argparse
 import sqlite3
 import logging
 import csv
+import os
 
-conn = sqlite3.connect('./data/database.sqlite')
+
+parser = argparse.ArgumentParser(description='Match accounts from the old database to current student emails')
+parser.add_argument('--sqlite_db', default='./data/database.sqlite', help='Path to the SQLite db file')
+parser.add_argument('--students', default='./data/students.csv', help='Path to the csv file with students info')
+parser.add_argument('--outfolder', default='./data/', help='Path to the folder where output files will be placed')
+
+args = parser.parse_args()
+
+conn = sqlite3.connect(args.sqlite_db)
 conn.row_factory = lambda c, r: dict(sqlite3.Row(c, r))
 cur = conn.cursor()
 
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] [%(levelname)-7s] %(message)s')
 
-with open('./data/students.csv', encoding='utf-8') as csvfile:
+os.makedirs(args.outfolder, exist_ok=True)
+with open(args.students, encoding='utf-8') as csvfile:
 	reader = csv.DictReader(csvfile)
 	students = list(reader)
 	logging.info('Loaded database of current students (count: %s)', len(students))
@@ -48,12 +59,12 @@ logging.info('Mapped %s accounts. Ignored %s accounts with no points. Did not fi
 not_mapped = old_users_count - (total + len(not_found))
 logging.info('Old database contains %s more users not in the list of students', not_mapped)
 
-with open('data/output.csv', 'w', encoding='utf-8', newline='') as file:
+with open(os.path.join(args.outfolder, 'accounts.csv'), 'w', encoding='utf-8', newline='') as file:
 	writer = csv.DictWriter(file, fieldnames=['full_name', 'email', 'points'], delimiter=',')
 	writer.writeheader()
 	writer.writerows(new_users)
 
-with open('data/not_found.txt', 'w') as file:
+with open(os.path.join(args.outfolder, 'not_found_emails.txt'), 'w') as file:
 	file.writelines(map(lambda s: s + '\n', not_found))
 
 logging.info('Data written to file')
