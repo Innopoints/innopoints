@@ -1,4 +1,4 @@
 temp
 logs
-*.sqlite
+migration/data
 .env
