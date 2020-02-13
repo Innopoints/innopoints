@@ -56,7 +56,7 @@ for student in students:
 logging.info('Account mapping completed.')
 logging.info('Mapped %s accounts. Ignored %s accounts with no points. Did not find old accounts for %s students.',
 				len(new_users), total - len(new_users), len(not_found))
-not_mapped = old_users_count - (total + len(not_found))
+not_mapped = old_users_count - total
 logging.info('Old database contains %s more users not in the list of students', not_mapped)
 
 with open(os.path.join(args.outfolder, 'accounts.csv'), 'w', encoding='utf-8', newline='') as file:
