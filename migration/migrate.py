@@ -1,14 +1,18 @@
 import argparse
 import sqlite3
 import logging
+import json
 import csv
 import os
+
+import psycopg2, psycopg2.extras
 
 
 parser = argparse.ArgumentParser(description='Match accounts from the old database to current student emails')
 parser.add_argument('--sqlite_db', default='./data/database.sqlite', help='Path to the SQLite db file')
 parser.add_argument('--students', default='./data/students.csv', help='Path to the csv file with students info')
 parser.add_argument('--outfolder', default='./data/', help='Path to the folder where output files will be placed')
+parser.add_argument('db_url', nargs='?', default=None, help='Connection URL to the target Postgres DB')
 
 args = parser.parse_args()
 
@@ -64,10 +68,41 @@ with open(os.path.join(args.outfolder, 'accounts.csv'), 'w', encoding='utf-8', n
 	writer.writeheader()
 	writer.writerows(new_users)
 
-with open(os.path.join(args.outfolder, 'not_found_emails.txt'), 'w') as file:
-	file.writelines(map(lambda s: s + '\n', not_found))
+if len(not_found) > 0:
+	with open(os.path.join(args.outfolder, 'not_found_emails.txt'), 'w') as file:
+		file.writelines(map(lambda s: s + '\n', not_found))
 
-logging.info('Data written to file')
+logging.info('Data written to file(s)')
 
 cur.close()
 conn.close()
+
+if args.db_url is not None:
+	logging.info('Writing to target database')
+	conn = psycopg2.connect(args.db_url)
+	cur = conn.cursor()
+	default_notification_settings = json.dumps({
+		'innostore': 'off',
+		'volunteering': 'off',
+		'project_creation': 'off',
+		'administration': 'off',
+		'service': 'email',
+	})
+	psycopg2.extras.execute_values(
+			cur, 
+			'INSERT INTO accounts (full_name, email, is_admin, notification_settings) VALUES %s',
+			new_users,
+			template=f"(%(full_name)s, %(email)s, false, '{default_notification_settings}')",
+	)
+	logging.debug('Accounts created')
+	psycopg2.extras.execute_values(
+			cur, 
+			'INSERT INTO transactions (account_email, change) VALUES %s',
+			new_users,
+			template=f"(%(email)s, %(points)s)",
+	)
+	logging.debug('Transactions created')
+	conn.commit()
+	cur.close()
+	conn.close()
+	logging.info('Points added successfully')
