@@ -38,11 +38,11 @@ jobs:
         source: "."
         target: "/opt/app" # update to appropriate target
 
-    - name: Executing remote  command
+    - name: Executing deploy command
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
-        script: ./opt/app/deploy-prod.sh
+        script: /opt/app/deploy-prod.sh
