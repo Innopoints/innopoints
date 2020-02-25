@@ -45,4 +45,4 @@ jobs:
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
-        script: /opt/app/deploy-prod.sh
+        script: PROJECT_HOME=/opt/app /opt/app/deploy-prod.sh
