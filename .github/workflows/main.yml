@@ -1,6 +1,8 @@
 name: CI
 
-on: [push]
+on:
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -24,3 +26,23 @@ jobs:
         ls -al frontend
         echo "Backend:"
         ls -al backend
+    
+    - name: Copy file via scp
+      uses: appleboy/scp-action@master
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        KEY: ${{ secrets.SSHKEY }}
+      with:
+        source: "."
+        target: "/opt/app" # update to appropriate target
+
+    - name: Executing remote  command
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        KEY: ${{ secrets.SSHKEY }}
+        script: ./opt/app/deploy-prod.sh
