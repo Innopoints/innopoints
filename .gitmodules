@@ -1,6 +1,7 @@
 [submodule "backend"]
 	path = backend
 	url = https://github.com/illright/innopoints-backend
+	branch = master
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/VanishMax/innopoints-frontend
