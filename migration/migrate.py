@@ -89,8 +89,8 @@ if args.db_url is not None:
 		'service': 'email',
 	})
 	psycopg2.extras.execute_values(
-			cur, 
-			'INSERT INTO accounts (full_name, email, is_admin, notification_settings) VALUES %s',
+			cur,
+			'INSERT INTO accounts (full_name, email, is_admin, notification_settings) VALUES %s ON CONFLICT (email) DO NOTHING',
 			new_users,
 			template=f"(%(full_name)s, %(email)s, false, '{default_notification_settings}')",
 	)
