@@ -1,0 +1,7 @@
+{
+  "python.autoComplete.extraPaths": ["./backend"],
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.pylintArgs": ["--rcfile", "./backend/.pylintrc"],
+  "eslint.workingDirectories": ["./frontend"]
+}
