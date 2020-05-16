@@ -34,6 +34,7 @@ services:
       - 10000:10000       # For Sapper something. Dev only
     volumes:
       - ./frontend/src:/app/src    # To detect changes. Dev only
+      - ./frontend/static:/app/static    # To detect changes. Dev only
 
   db:
     image: postgres:12.1-alpine
