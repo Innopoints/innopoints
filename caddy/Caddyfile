@@ -1,0 +1,15 @@
+localhost
+
+# Compress responses according to Accept-Encoding headers
+encode gzip zstd
+
+@auth {
+	path_regexp ^/(login|authorize|logout)
+}
+
+# Send API and auth requests to backend
+reverse_proxy /api/v1/* backend:7507
+reverse_proxy @auth backend:7507
+
+# Everything else to frontend
+reverse_proxy frontend:3000

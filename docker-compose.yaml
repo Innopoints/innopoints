@@ -1,10 +1,21 @@
 version: '3'
 
 services:
-  nginx:
-    build: ./nginx/
+  # nginx:
+  #   build: ./nginx/
+  #   ports:
+  #     - 80:80
+  #   depends_on:
+  #     - backend
+  #     - frontend
+  #   networks:
+  #     - servers
+
+  caddy:
+    build: ./caddy/
     ports:
       - 80:80
+      - 443:443
     depends_on:
       - backend
       - frontend
