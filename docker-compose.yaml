@@ -47,6 +47,15 @@ services:
     volumes:
       - database:/var/lib/postgresql/data
 
+  swagger:
+    image: swaggerapi/swagger-ui
+    environment:
+      SWAGGER_JSON: /app/swagger.yaml
+    ports:
+      - 8080:8080
+    volumes:
+      - ./backend/swagger.yaml:/app/swagger.yaml
+
 networks:
   servers:
     driver: bridge

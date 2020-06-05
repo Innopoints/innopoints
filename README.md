@@ -8,7 +8,7 @@ How to run the project. First of all, make sure you checked out all submodules a
 
 ### Docker
 
-Just run `docker-compose up` to run in dev mode. It will automatically set the environment to develop and bind ports required for Svelte server and pgAdmin, as well as the source code volumes for hot reloading.
+Just run `docker-compose up` to run in dev mode. It will automatically set the environment to develop and bind ports required for Svelte server and pgAdmin, as well as the source code volumes for hot reloading. The website should be accessible on [localhost](http://localhost), while the Swagger Docs are to be on [localhost:8080](http://localhost:8080).
 For production mode, run `docker-compose -f docker-compose.prod.yaml up`, which will remove any unnecessary binding and run much faster after the initial build.
 
 ### Manually
