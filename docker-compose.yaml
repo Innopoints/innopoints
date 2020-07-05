@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   nginx:
@@ -57,7 +57,10 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./backend/swagger.yaml:/app/swagger.yaml
+      - type: bind
+        source: ./backend/swagger.yaml
+        target: /app/swagger.yaml
+        read_only: true
 
 networks:
   servers:
