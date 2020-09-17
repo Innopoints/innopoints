@@ -2,9 +2,7 @@ version: '3'
 
 services:
   nginx:
-    build: 
-      context: ./nginx/
-      dockerfile: Dockerfile.prod
+    build: ./nginx/
     image: innopoints-nginx
     ports:
       - 80:80

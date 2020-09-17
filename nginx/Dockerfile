@@ -1,8 +1,7 @@
-FROM nginx:1.14-alpine
+FROM nginx:1.19-alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
 
-COPY nginx.common.conf /etc/nginx/
-COPY nginx.dev.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
