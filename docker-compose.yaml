@@ -5,6 +5,8 @@ services:
     build: ./nginx/
     ports:
       - 80:80
+    volumes:
+      - ./backend/static_files:/www/media
     depends_on:
       - backend
       - frontend
