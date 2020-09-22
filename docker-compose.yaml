@@ -27,6 +27,9 @@ services:
     volumes:
       - ./backend/innopoints:/app/innopoints        # To detect file changes. Dev only
       - ./backend/static_files:/app/static_files
+      - type: bind
+        source: ./backend/db.sqlite3
+        target: /app/db.sqlite3
 
   frontend:
     build: ./frontend/

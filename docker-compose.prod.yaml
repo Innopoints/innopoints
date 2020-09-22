@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
   nginx:
@@ -26,6 +26,9 @@ services:
       - postgres_db
     volumes:
       - ./backend/static_files:/app/static_files
+      - type: bind
+        source: ./backend/db.sqlite3
+        target: /app/db.sqlite3
     depends_on:
       - db
 
