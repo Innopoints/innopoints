@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  maintenance:
+    image: nginx:alpine
+    volumes:
+      - ./frontend/maintenance:/usr/share/nginx/html
+    ports:
+      - 80:80
